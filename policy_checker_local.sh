@@ -112,6 +112,13 @@ then
         poldesc=$dname
 fi
 
+if [ "$ptype" == "managed" ]
+then
+	polpath=AWS/config/managed/$file
+else
+	polpath=AWS/config/custom/$file
+fi
+
 
 echo '{
   "name": '"\"$name\""',
@@ -120,10 +127,11 @@ echo '{
   "category": "service",
   "status": "active",
   "content_type": "git",
-  "content_url": "https://github.com/karthick-core/corestack-policies.git",
-  "content_path": "AWS/config/'"$file\""',
-  "content_password_or_key": "<insert password here>",
-  "content_username": "corestackreports",
+  "content_url": "<insert git url>",
+  "content_path": '"\"$polpath\""',
+  "content_password_or_key": "<insert git password here>",
+  "content_branch": '"\"$git_branch\""',
+  "content_username": "<insert git account>",
   "classification": '"\"$classify\""',
   "sub_classification": '"\"$subclassify\""',
   "services": [
@@ -292,7 +300,7 @@ do
 		fi
 	fi
 
-        if [ "$ptype" == "config" ]
+        if [[ "$ptype" == "config" || "$ptype" == "managed" || "$ptype" == "custom" ]]
         then
                 echo "Detected aws policy"
                 createawspolicymeta
